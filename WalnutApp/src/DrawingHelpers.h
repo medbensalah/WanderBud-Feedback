@@ -1,12 +1,15 @@
+#include <iostream>
+
 #include "Walnut/Application.h"
 #include "Walnut/Image.h"
 
 namespace WanderBud
 {
     static void SetImGuiStyle();
-    static void DrawHeader(const Walnut::Image& image, const Walnut::Image& title, ImVec4 tint = {1.0f,1.0f,1.0f,1.0f});
+    static void DrawHeader(const Walnut::Image& image, const Walnut::Image& title,
+                           ImVec4 tint = {1.0f, 1.0f, 1.0f, 1.0f});
 
-    
+    static bool DrawQuestion(const char* header, const char* body, int* answer, int id);
 }
 
 
@@ -14,7 +17,7 @@ void WanderBud::SetImGuiStyle()
 {
     ImGuiStyle* style = &ImGui::GetStyle();
 
-    style->WindowPadding = ImVec2(7, 5);
+    style->WindowPadding = ImVec2(35, 5);
     style->FramePadding = ImVec2(7, 3);
     style->CellPadding = ImVec2(7, 0);
     style->ItemSpacing = ImVec2(7, 3);
@@ -116,16 +119,15 @@ void WanderBud::SetImGuiStyle()
     ImGui::SetColorEditOptions(flags);
 }
 
-
 void WanderBud::DrawHeader(const Walnut::Image& image, const Walnut::Image& title, ImVec4 tint)
 {
     // Draw the header
     ImGui::Image(image.GetDescriptorSet(), ImVec2{128.0f, 128.0f});
 
     ImGui::SameLine();
-    
+
     // Draw the header
-    float maxHeight = 128.0f;
+    float maxHeight = 72.0f;
     float titleHeight = maxHeight;
     float titleWidth = title.GetWidth() * (titleHeight / title.GetHeight());
 
@@ -134,13 +136,49 @@ void WanderBud::DrawHeader(const Walnut::Image& image, const Walnut::Image& titl
     {
         titleWidth = availableWidth - 20.0f;
         titleHeight = title.GetHeight() * (titleWidth / title.GetWidth());
-        ImGui::SetCursorPosY(ImGui::GetCursorPosY() + (maxHeight - titleHeight) / 2.0f);
     }
-    ImGui::Image(title.GetDescriptorSet(), ImVec2{titleWidth, titleHeight}, ImVec2{0.0f, 0.0f}, ImVec2{1.0f, 1.0f}, tint);
+    ImGui::SetCursorPosY(ImGui::GetCursorPosY() + (128 - titleHeight) / 2.0f);
+    // ImGui::SetCursorPosY(ImGui::GetCursorPosY() + (maxHeight - titleHeight) / 2.0f);
+    ImGui::Image(title.GetDescriptorSet(), ImVec2{titleWidth, titleHeight}, ImVec2{0.0f, 0.0f}, ImVec2{1.0f, 1.0f},
+                 tint);
+}
+
+bool WanderBud::DrawQuestion(const char* header, const char* body, int* answer, int id)
+{
+    ImGui::PushID(id);
+
+    bool result = false;
 
     ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[1]);
-    ImGui::Text("testing font !!!");
+    ImGui::Text(header);
     ImGui::PopFont();
-    ImGui::Text("testing font !!!");
-    
+    ImGui::Indent();
+    ImGui::Text(body);
+    ImGui::Unindent();
+
+    ImGui::SetCursorPosX((ImGui::GetContentRegionAvail().x - 571.0f) / 2);
+    ImGui::BeginGroup();
+    result |= ImGui::RadioButton("Very bad", answer, 1);
+    ImGui::SameLine();
+    ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 20.0f);
+
+    result |= ImGui::RadioButton("Bad", answer, 2);
+    ImGui::SameLine();
+    ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 20.0f);
+
+    result |= ImGui::RadioButton("Neutral", answer, 3);
+    ImGui::SameLine();
+    ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 20.0f);
+
+    result |= ImGui::RadioButton("Good", answer, 4);
+    ImGui::SameLine();
+    ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 20.0f);
+
+    result |= ImGui::RadioButton("Excellentg", answer, 5);
+    ImGui::EndGroup();
+
+    ImGui::Spacing();
+    ImGui::Spacing();
+    ImGui::PopID();
+    return result;
 }
