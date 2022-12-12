@@ -76,9 +76,19 @@ bool FeedbackLayer::IsFormValid()
             return false;
         }
     }
+    json["name"] = m_EventName;
+    json["Date"] = m_EventDate;
+    json["questions"] = m_FormQuestions;
+    json["answers"] = m_FormAnswers;
+    json["comment"] = m_Comment;
+
     return true;
 }
 
 void FeedbackLayer::Submit()
 {
+    // cpr::Response r = cpr::Post(cpr::Url{BASE_URL},
+    //                   cpr::Body{j.dump()},
+    //                   cpr::Header{{"Content-Type", "text/plain"}});
+
 }

@@ -3,6 +3,10 @@
 #include "Walnut/Layer.h"
 #include "DrawingHelpers.h"
 
+#include <nlohmann/json.hpp>
+#include <cpr/cpr.h>
+
+
 class FeedbackLayer : public Walnut::Layer
 {
 public:
@@ -44,6 +48,8 @@ private:
 
     std::string m_EventName;
     std::string m_EventDate;
+    nlohmann::json json;
+    std::string BASE_URL = "http://www.httpbin.org/post"
 
     std::vector<const char*> m_FormQuestions;
     std::vector<int> m_FormAnswers;
